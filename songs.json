@@ -1,0 +1,18 @@
+[
+    { "title": "Ze sceny", "src": "songs/01 Ze sceny.mp3" },
+    { "title": "Encore, jeszcze raz", "src": "songs/02 Encore, jeszcze raz.mp3" },
+    { "title": "Pani Bovary", "src": "songs/03 Pani Bovary.mp3" },
+    { "title": "Przyjaciele, których nie miałem", "src": "songs/04 Przyjaciele, których nie miałem.mp3" },
+    { "title": "Pejzaż z szubienicą", "src": "songs/05 Pejzaż z szubienicą.mp3" },
+    { "title": "Śmiech", "src": "songs/06 Śmiech.mp3" },
+    { "title": "Casanova - Felinii", "src": "songs/07 Casanova - Felinii.mp3" },
+    { "title": "Pompeja", "src": "songs/08 Pompeja.mp3" },
+    { "title": "Kraj", "src": "songs/09 Kraj.mp3" },
+    { "title": "Krajobraz po uczcie", "src": "songs/10 Krajobraz po uczcie.mp3" },
+    { "title": "Dziady", "src": "songs/11 Dziady.mp3" },
+    { "title": "Cesarz", "src": "songs/12 Cesarz.mp3" },
+    { "title": "Starzy ludzie w autobusie", "src": "songs/13 Starzy ludzie w autobusie.mp3" },
+    { "title": "Mur", "src": "songs/14 Mur.mp3" },
+    { "title": "Źródło (Wąwóz)", "src": "songs/15 Źródło (Wąwóz).mp3" },
+    { "title": "Mury", "src": "songs/16 Mury.mp3" },
+]
