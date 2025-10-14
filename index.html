@@ -20,7 +20,6 @@
       text-align: center;
       overflow-x: hidden;
       padding-top: 40px;
-      
     }
 
     header {
@@ -51,44 +50,43 @@
       transform: translateX(100vw);
     }
 
-    @keyframes slideIn {
-      to {
-        transform: translateX(0);
-      }
-    }
+    @keyframes slideIn { to { transform: translateX(0); } }
 
-    .wynik {
-      color: #2b2b2b;
-      font-size: 1.9em;
-      line-height: 1.7;
-    }
+    .wynik { color: #2b2b2b; font-size: 1.9em; line-height: 1.7; }
 
-    .gum-turbo {
+    .gum-turbo { font-weight: bold; color: #2b2b2b; font-size: 1em; }
+
+    /* Przyciski odtwarzacza */
+    .radio-btn {
+      margin: 5px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: none;
+      background: #f4c542;
       font-weight: bold;
+      cursor: pointer;
       color: #2b2b2b;
-      font-size: 1em;
+      font-size: 1.6em;
+    }
+
+    .radio-btn:hover { background: #f1b800; }
+
+    /* Styl napisu Radio Wolna Europa */
+    .radio-title {
+      font-size: 1.8em;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #2b2b2b;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
 
     @media (max-width: 600px) {
-      .kafelek {
-        padding: 18px;
-        max-width: 90%;
-        border-radius: 10px;
-      }
-
-      .wynik {
-        font-size: 1.2em;
-        line-height: 1.5;
-      }
-
-      .gum-turbo {
-        font-size: 1em;
-      }
-
-      header {
-        font-size: 1.6em;
-        margin-bottom: 15px;
-      }
+      .kafelek { padding: 18px; max-width: 90%; border-radius: 10px; }
+      .wynik { font-size: 1.2em; line-height: 1.5; }
+      .gum-turbo { font-size: 1em; }
+      header { font-size: 1.6em; margin-bottom: 15px; }
+      .radio-btn { font-size: 1.4em; padding: 8px 15px; }
+      .radio-title { font-size: 1.4em; }
     }
   </style>
 </head>
@@ -100,80 +98,126 @@
   </div>
 
   <div class="kafelek mniej-wazny">
-    <div class="wynik">
-      Dług urósł dziś o:
-    </div>
+    <div class="wynik">Dług urósł dziś o:</div>
     <div class="wynik" id="dzienny-przyrost"></div>
   </div>
 
   <div class="kafelek mniej-wazny">
-    <div class="wynik">
-      Odliczanie do miliona Gum Turbo:
-    </div>
+    <div class="wynik">Odliczanie do miliona Gum Turbo:</div>
     <div class="wynik" id="licznik"></div>
   </div>
 
+  <!-- Mini-radio kafelek -->
+  <div class="kafelek mniej-wazny" style="
+      background: linear-gradient(to bottom right, #ffd966, #fff8c0);
+      border: 2px solid #f4c542;
+      padding: 25px;
+      margin-bottom: 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      text-align: center;
+  ">
+    <div class="radio-title">Radio Wolna Europa</div>
+    <div class="wynik" id="song-title" style="font-size:1em; margin-bottom:10px; color:#2b2b2b;">Ładowanie...</div>
+    <audio id="radio" style="display:none;"></audio>
+    <div>
+      <button id="playPause" class="radio-btn">▶ Play</button>
+      <button id="reroll" class="radio-btn">Losuj nowy utwór</button>
+    </div>
+  </div>
+
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      function dniOdDaty(rok, miesiac, dzien) {
-        const dataStart = new Date(rok, miesiac - 1, dzien);
-        const dzisiaj = new Date();
-        const roznicaMs = dzisiaj - dataStart;
-        return Math.floor(roznicaMs / (1000 * 60 * 60 * 24));
-      }
+document.addEventListener("DOMContentLoaded", function () {
+  // Kalkulator Gum
+  function dniOdDaty(rok, miesiac, dzien) {
+    const dataStart = new Date(rok, miesiac - 1, dzien);
+    const dzisiaj = new Date();
+    const roznicaMs = dzisiaj - dataStart;
+    return Math.floor(roznicaMs / (1000 * 60 * 60 * 24));
+  }
 
-      const dni = dniOdDaty(2022, 4, 22);
-      const n = Math.floor(dni / 7);
-      const c = dni % 7;
+  const dni = dniOdDaty(2022, 4, 22);
+  const n = Math.floor(dni / 7);
+  const c = dni % 7;
 
-      let a = 0;
-      for (let i = 1; i <= n; i++) {
-        a += i;
-      }
-      a *= 7;
-      a += c * (n + 1);
-      a += 100;
+  let a = 0;
+  for (let i = 1; i <= n; i++) a += i;
+  a *= 7;
+  a += c * (n + 1);
+  a += 100;
 
-      const wartosc = (a * 0.3).toFixed(2).replace('.', ',');
+  const wartosc = (a * 0.3).toFixed(2).replace('.', ',');
 
-      document.getElementById("wynik").innerHTML = `
-        Kacper nie oddaje Gum Turbo od<br>
-        <span class="gum-turbo" style="font-size:2.1em">${dni} dni</span><br>
-        a winny jest<br>
-        <span class="gum-turbo" style="font-size:2.1em">${a} Gum Turbo</span><br>
-        co daje równowartość<br>
-        <span class="gum-turbo" style="font-size:2.1em">${wartosc} zł</span>
-      `;
+  document.getElementById("wynik").innerHTML = `
+    Kacper nie oddaje Gum Turbo od<br>
+    <span class="gum-turbo" style="font-size:2.1em">${dni} dni</span><br>
+    a winny jest<br>
+    <span class="gum-turbo" style="font-size:2.1em">${a} Gum Turbo</span><br>
+    co daje równowartość<br>
+    <span class="gum-turbo" style="font-size:2.1em">${wartosc} zł</span>
+  `;
 
-      const dziennyPrzyrost = Math.floor(dni / 7 + 1);
-      document.getElementById("dzienny-przyrost").innerHTML = `
-        <span class="gum-turbo">${dziennyPrzyrost} Gum Turbo</span>
-      `;
+  const dziennyPrzyrost = Math.floor(dni / 7 + 1);
+  document.getElementById("dzienny-przyrost").innerHTML = `<span class="gum-turbo">${dziennyPrzyrost} Gum Turbo</span>`;
 
-      const cel = new Date("2032-07-16T00:00:00");
+  const cel = new Date("2032-07-16T00:00:00");
+  function aktualizujLicznik() {
+    const teraz = new Date();
+    const roznica = cel - teraz;
+    if (roznica <= 0) {
+      document.getElementById("licznik").innerHTML = `<span class="gum-turbo">Już przekroczone!</span>`;
+      return;
+    }
+    const dni = Math.floor(roznica / (1000 * 60 * 60 * 24));
+    const godziny = Math.floor((roznica / (1000 * 60 * 60)) % 24);
+    const minuty = Math.floor((roznica / (1000 * 60)) % 60);
+    const sekundy = Math.floor((roznica / 1000) % 60);
+    document.getElementById("licznik").innerHTML = `<span class="gum-turbo">${dni} dni, ${godziny}h ${minuty}m ${sekundy}s</span>`;
+  }
+  aktualizujLicznik();
+  setInterval(aktualizujLicznik, 1000);
 
-      function aktualizujLicznik() {
-        const teraz = new Date();
-        const roznica = cel - teraz;
+  // Mini-radio
+  const audio = document.getElementById("radio");
+  const title = document.getElementById("song-title");
+  const playPauseBtn = document.getElementById("playPause");
+  const rerollBtn = document.getElementById("reroll");
+  let songs = [];
 
-        if (roznica <= 0) {
-          document.getElementById("licznik").innerHTML = `<span class="gum-turbo">Już przekroczone!</span>`;
-          return;
-        }
-
-        const dni = Math.floor(roznica / (1000 * 60 * 60 * 24));
-        const godziny = Math.floor((roznica / (1000 * 60 * 60)) % 24);
-        const minuty = Math.floor((roznica / (1000 * 60)) % 60);
-        const sekundy = Math.floor((roznica / 1000) % 60);
-
-        document.getElementById("licznik").innerHTML = `
-          <span class="gum-turbo">${dni} dni, ${godziny}h ${minuty}m ${sekundy}s</span>
-        `;
-      }
-
-      aktualizujLicznik();
-      setInterval(aktualizujLicznik, 1000);
+  fetch("songs.json")
+    .then(res => res.json())
+    .then(data => {
+      songs = data;
+      playRandom();
     });
+
+  function playRandom() {
+    if(!songs.length) return;
+    const song = songs[Math.floor(Math.random() * songs.length)];
+    audio.src = song.src;
+    title.textContent = song.title;
+    audio.play();
+    playPauseBtn.textContent = "❚❚ Pause";
+  }
+
+  playPauseBtn.addEventListener("click", () => {
+    if(audio.paused) {
+      audio.play();
+      playPauseBtn.textContent = "❚❚ Pause";
+    } else {
+      audio.pause();
+      playPauseBtn.textContent = "▶ Play";
+    }
+  });
+
+  audio.addEventListener("ended", () => {
+    playPauseBtn.textContent = "▶ Play";
+    playRandom();
+  });
+
+  rerollBtn.addEventListener("click", playRandom);
+
+});
   </script>
 </body>
 </html>
