@@ -53,7 +53,6 @@
     @keyframes slideIn { to { transform: translateX(0); } }
 
     .wynik { color: #2b2b2b; font-size: 1.9em; line-height: 1.7; }
-
     .gum-turbo { font-weight: bold; color: #2b2b2b; font-size: 1em; }
 
     /* Przyciski odtwarzacza */
@@ -68,7 +67,6 @@
       color: #2b2b2b;
       font-size: 1.6em;
     }
-
     .radio-btn:hover { background: #f1b800; }
 
     /* Styl napisu Radio Wolna Europa */
@@ -183,26 +181,28 @@ document.addEventListener("DOMContentLoaded", function () {
   const playPauseBtn = document.getElementById("playPause");
   const rerollBtn = document.getElementById("reroll");
   let songs = [];
+  let songLoaded = false;
 
   fetch("songs.json")
     .then(res => res.json())
     .then(data => {
       songs = data;
-      playRandom();
+      title.textContent = "Kliknij ▶ Play, aby rozpocząć";
+      songLoaded = true;
     });
 
   function playRandom() {
-    if(!songs.length) return;
+    if (!songs.length) return;
     const song = songs[Math.floor(Math.random() * songs.length)];
     audio.src = song.src;
     title.textContent = song.title;
-    audio.play();
-    playPauseBtn.textContent = "❚❚ Pause";
   }
 
   playPauseBtn.addEventListener("click", () => {
-    if(audio.paused) {
-      audio.play();
+    if (!songLoaded) return;
+    if (audio.paused) {
+      if (!audio.src) playRandom();
+      audio.play().catch(() => console.log("Autoplay zablokowany, kliknij ponownie Play"));
       playPauseBtn.textContent = "❚❚ Pause";
     } else {
       audio.pause();
@@ -210,12 +210,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  rerollBtn.addEventListener("click", () => {
+    playRandom();
+    audio.play().catch(() => {
+      playPauseBtn.textContent = "▶ Play";
+    });
+  });
+
   audio.addEventListener("ended", () => {
     playPauseBtn.textContent = "▶ Play";
     playRandom();
   });
-
-  rerollBtn.addEventListener("click", playRandom);
 
 });
   </script>
